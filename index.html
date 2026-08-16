@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#0b0e12">
+<title>末世孤城 · 半感染者</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div id="app">
+  <canvas id="game"></canvas>
+
+  <!-- 顶部 HUD -->
+  <div id="hud" class="hidden">
+    <div id="hud-top">
+      <div class="stat-block">
+        <div class="stat-row">
+          <span class="stat-label">生命</span>
+          <div class="bar"><div id="bar-hp" class="bar-fill hp"></div></div>
+          <span id="txt-hp" class="stat-num"></span>
+        </div>
+        <div class="stat-row">
+          <span class="stat-label">感染</span>
+          <div class="bar"><div id="bar-inf" class="bar-fill inf"></div></div>
+          <span id="txt-inf" class="stat-num"></span>
+        </div>
+        <div class="stat-row">
+          <span class="stat-label">饥饿</span>
+          <div class="bar"><div id="bar-hun" class="bar-fill hun"></div></div>
+          <span id="txt-hun" class="stat-num"></span>
+        </div>
+        <div class="stat-row">
+          <span class="stat-label">口渴</span>
+          <div class="bar"><div id="bar-thi" class="bar-fill thi"></div></div>
+          <span id="txt-thi" class="stat-num"></span>
+        </div>
+        <div class="stat-row">
+          <span class="stat-label">体力</span>
+          <div class="bar"><div id="bar-en" class="bar-fill en"></div></div>
+          <span id="txt-en" class="stat-num"></span>
+        </div>
+      </div>
+      <div id="day-info">
+        <div id="txt-day">第 1 天</div>
+        <div id="txt-weather">阴</div>
+      </div>
+      <div id="hud-buttons">
+        <button class="hud-btn" id="btn-bag" title="背包">🎒</button>
+        <button class="hud-btn" id="btn-diary" title="日记">📖</button>
+        <button class="hud-btn" id="btn-set" title="设置">⚙️</button>
+      </div>
+    </div>
+    <div id="toast-wrap"></div>
+  </div>
+
+  <!-- 虚拟摇杆 / 操作按钮 -->
+  <div id="controls" class="hidden">
+    <div id="joystick-zone">
+      <div id="joystick"><div id="joystick-knob"></div></div>
+    </div>
+    <div id="action-btns">
+      <button class="act-btn" id="btn-atk">🗡</button>
+      <button class="act-btn" id="btn-interact">✋</button>
+      <button class="act-btn" id="btn-skill" title="尸化之爪">🩸</button>
+    </div>
+  </div>
+
+  <!-- 弹窗层 -->
+  <div id="modal-mask" class="hidden">
+    <div id="modal">
+      <div id="modal-title"></div>
+      <div id="modal-body"></div>
+      <div id="modal-btns"></div>
+    </div>
+  </div>
+
+  <!-- 背包面板 -->
+  <div id="panel-bag" class="panel hidden">
+    <div class="panel-head"><span>背包</span><button class="panel-close" data-close="bag">×</button></div>
+    <div id="bag-grid" class="grid"></div>
+  </div>
+
+  <!-- 日记面板 -->
+  <div id="panel-diary" class="panel hidden">
+    <div class="panel-head"><span>废墟日记 · 阿岚的笔记</span><button class="panel-close" data-close="diary">×</button></div>
+    <div id="diary-list"></div>
+  </div>
+
+  <!-- 设置面板 -->
+  <div id="panel-set" class="panel hidden">
+    <div class="panel-head"><span>设置</span><button class="panel-close" data-close="set">×</button></div>
+    <div class="set-row"><span>音效</span><button id="set-sfx" class="toggle-btn">开</button></div>
+    <div class="set-row"><span>音乐</span><button id="set-music" class="toggle-btn">开</button></div>
+    <div class="set-row"><span>屏幕震动</span><button id="set-shake" class="toggle-btn">开</button></div>
+    <div class="set-row"><span>TapTap</span><button id="btn-tap" class="toggle-btn">未登录</button></div>
+    <div class="set-row"><span>游戏存档</span><button id="btn-save" class="toggle-btn">已自动保存</button></div>
+    <button class="set-danger" id="btn-reset">清除存档并重开</button>
+  </div>
+
+  <!-- 度过一天转场 -->
+  <div id="daypass" class="hidden">
+    <div id="daypass-inner">
+      <div id="daypass-day"></div>
+      <div id="daypass-weather"></div>
+      <div id="daypass-line"></div>
+    </div>
+  </div>
+
+  <!-- 结局画面 -->
+  <div id="ending" class="hidden">
+    <div id="ending-inner">
+      <div id="ending-title"></div>
+      <div id="ending-text"></div>
+      <button id="btn-ending-restart">重新开始</button>
+    </div>
+  </div>
+
+  <div id="loading">
+    <div id="loading-text">风穿过钢筋水泥的缝隙…</div>
+  </div>
+</div>
+
+<!-- 官方 TapTap H5 SDK 从这里接入（可选，见 docs/taptap-sdk.md） -->
+<!-- <script src="https://lf3-cdn-tos.bytecdntp.com/cdn/expire-1-M/tap-web-sdk/.../tap-web-sdk.min.js"></script> -->
+<script src="js/utils.js"></script>
+<script src="js/config.js"></script>
+<script src="js/audio.js"></script>
+<script src="js/save.js"></script>
+<script src="js/sdk/taptap.js"></script>
+<script src="js/state.js"></script>
+<script src="js/input.js"></script>
+<script src="js/ui.js"></script>
+<script src="js/entities.js"></script>
+<script src="js/scenes/menu.js"></script>
+<script src="js/scenes/base.js"></script>
+<script src="js/scenes/scavenge.js"></script>
+<script src="js/main.js"></script>
+</body>
+</html>
