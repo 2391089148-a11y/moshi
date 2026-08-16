@@ -240,3 +240,28 @@ canvas#game {
 /* ========== 滚动条 ========== */
 ::-webkit-scrollbar { width: 4px; }
 ::-webkit-scrollbar-thumb { background: rgba(170,190,182,.2); border-radius: 2px; }
+
+
+/* ========== 横屏引导（手机竖屏时提示旋转） ========== */
+#rotate-overlay {
+  position: fixed; inset: 0; z-index: 99;
+  background: radial-gradient(ellipse at center, #0b0e12 0%, #04060a 100%);
+  display: none;
+  align-items: center; justify-content: center;
+  text-align: center;
+}
+#rotate-overlay .rot { font-size: 64px; display: block; margin-bottom: 20px; animation: rot-spin 1.8s ease-in-out infinite; }
+@keyframes rot-spin { 0%,100% { transform: rotate(90deg); } 50% { transform: rotate(270deg); } }
+#rotate-overlay .t1 { font-size: 19px; letter-spacing: 4px; color: #d8e0dd; }
+#rotate-overlay .t2 { font-size: 12px; margin-top: 10px; color: #7d8d88; letter-spacing: 1px; }
+#rotate-overlay button {
+  margin-top: 26px; padding: 9px 22px; border-radius: 20px;
+  background: rgba(60,80,75,.4); border: 1px solid rgba(170,190,182,.2);
+  color: #b7c2be; font-size: 13px; cursor: pointer;
+}
+@media (orientation: portrait) and (max-width: 900px) {
+  #rotate-overlay { display: flex; }
+}
+@media (orientation: landscape) {
+  #rotate-overlay { display: none !important; }
+}
