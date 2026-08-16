@@ -81,6 +81,21 @@
     window.addEventListener('pointerdown', audioStart);
     window.addEventListener('keydown', audioStart);
 
+    // 横屏引导：竖屏时提示旋转；"仍要竖屏"按钮可临时关闭
+    const dismiss = document.getElementById('rotate-dismiss');
+    if (dismiss) dismiss.addEventListener('click', () => {
+      document.getElementById('rotate-overlay').style.display = 'none';
+    });
+    // 尽力锁定横屏（仅全屏/受支持环境生效，失败静默）
+    const tryLockLandscape = () => {
+      try {
+        if (screen.orientation && screen.orientation.lock) {
+          screen.orientation.lock('landscape').catch(() => {});
+        }
+      } catch (e) { /* 静默 */ }
+    };
+    window.addEventListener('pointerdown', tryLockLandscape, { once: true });
+
     // 切后台自动保存
     document.addEventListener('visibilitychange', () => {
       if (document.hidden && LG.State.s) LG.State.autosave();
