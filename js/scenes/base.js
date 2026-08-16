@@ -446,8 +446,11 @@
 
     updateCamera() {
       const w = window.innerWidth, h = window.innerHeight;
-      this.camX = LG.Utils.clamp(this.player.x - w / 2, 0, Math.max(0, this.worldW - w));
-      this.camY = LG.Utils.clamp(this.player.y - h / 2, 0, Math.max(0, this.worldH - h));
+      // 世界小于视口时居中（横屏下基地不再偏左上角留黑边）
+      const minX = Math.min(0, this.worldW - w), maxX = Math.max(0, this.worldW - w);
+      const minY = Math.min(0, this.worldH - h), maxY = Math.max(0, this.worldH - h);
+      this.camX = LG.Utils.clamp(this.player.x - w / 2, minX, maxX);
+      this.camY = LG.Utils.clamp(this.player.y - h / 2, minY, maxY);
     },
 
     wanderEntity(e, speed, dt, bounds) {
