@@ -1205,8 +1205,11 @@
         sx = (Math.random() - 0.5) * this.shakeMag * (this.shakeT / 0.3);
         sy = (Math.random() - 0.5) * this.shakeMag * (this.shakeT / 0.3);
       }
-      this.camX = LG.Utils.clamp(this.player.x - w / 2 + sx, 0, Math.max(0, this.worldW - w));
-      this.camY = LG.Utils.clamp(this.player.y - h / 2 + sy, 0, Math.max(0, this.worldH - h));
+      // 世界小于视口时居中（横屏适配）
+      const minX = Math.min(0, this.worldW - w), maxX = Math.max(0, this.worldW - w);
+      const minY = Math.min(0, this.worldH - h), maxY = Math.max(0, this.worldH - h);
+      this.camX = LG.Utils.clamp(this.player.x - w / 2 + sx, minX, maxX);
+      this.camY = LG.Utils.clamp(this.player.y - h / 2 + sy, minY, maxY);
     },
 
     shake(mag) {
